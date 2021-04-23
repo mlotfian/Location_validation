@@ -1,0 +1,11 @@
+# ignore all the csv, tif, whl, and pkl files files
+
+*.csv
+*.tif
+*.whl
+*.pkl
+
+# ignore the folders
+
+models_saved/*
+env_variables/*
