@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Location Validation</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+<!-- <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" /> -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+     crossorigin=""></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <h3>A test of bird species location validation!</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="{{ url_for('home')}}"> Main page </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </nav>
+
+ <div id="mapid" ></div>
+ <div id="over_map">
+   <form action="{{ url_for('predict')}}"method="post" onsubmit="myFunction()">
+
+     <input type="hidden" id="lonId" name="lon" value="">
+     <input type="hidden" id="latId" name="lat" value=""/>
+     <div class="tab">
+       <input type="text" name="sp_name" placeholder="Enter species name" required="required">
+       </div>
+       <div class="submit">
+         <button type="submit" class="btn btn-success">Predict the probability of occurrence</button>
+       </div>
+       </form>
+ </div>
+ <!-- now showing the message for probability of occurrence -->
+ {% for message in get_flashed_messages() %}
+ <div class="alert alert-success alert-dismissible fade show probTxt" role="alert">
+   {{ prediction_text }}
+   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+  </button>
+ </div>
+ {% endfor %}
+
+
+ <script type="text/javascript">
+
+ navigator.geolocation.getCurrentPosition(function(location) {
+   var latlng = new L.LatLng(location.coords.latitude, location.coords.longitude);
+
+   var mymap = L.map('mapid').setView(latlng, 18);
+   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoibWxvdGZpYW4iLCJhIjoiY2tvMDdoMGJiMGN2azJ3bXZoZ2VoMmw4ZiJ9.JswRscDkgTECIk9aA7E8EA'
+}).addTo(mymap);
+
+mymap.on('click',
+    function(e){
+        var coord = e.latlng; // no need for toString()
+        var lat = coord.lat;
+        var lng = coord.lng;
+        var newMarker = L.marker(e.latlng, {draggable:'true'}).addTo(mymap)
+        document.getElementById("lonId").value = lng;
+        document.getElementById("latId").value = lat;
+
+});
+});
+
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

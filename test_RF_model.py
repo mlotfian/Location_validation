@@ -10,6 +10,7 @@ from imblearn.ensemble import BalancedRandomForestClassifier
 
 import fiona
 from shapely.geometry import Polygon, mapping
+import joblib
 
 def clip_points(targets,poly):
   test_target = targets.intersection(poly)
@@ -52,7 +53,7 @@ for index, row in sb_test.iterrows():
     to_test = (test_df.drop(columns=['lat','lon','geometry']))
     to_train = (train_df.drop(columns=['lat','lon','geometry']))
     x_train = to_train.drop(columns=['pres_abs'])
-    print(x_train.columns)
+    #print(x_train.columns)
     y_train = to_train[['pres_abs']]
   #y_train['PRES_ABS'] = y_train['PRES_ABS'].map({'t': 1, 'f': 0})
     x_test = to_test.drop(columns=['pres_abs'])
@@ -60,7 +61,7 @@ for index, row in sb_test.iterrows():
   #y_test['PRES_ABS'] = y_test['PRES_ABS'].map({'t': 1, 'f': 0})
 
     #start training
-    globals()["RF" + str(i)]=BalancedRandomForestClassifier(n_estimators=2000)
+    globals()["RF" + str(i)]=BalancedRandomForestClassifier(n_estimators=500)
     (globals()["RF" + str(i)]).fit(x_train,y_train)
 
     all_models.append(globals()["RF" + str(i)])
@@ -78,7 +79,9 @@ for index, row in sb_test.iterrows():
       }
   )
 
+    joblib.dump(globals()["RF" + str(i)], 'RF' + str(i) +'_Anas crecca.pkl')
     i+=1
+
 
 
 def combine_rfs(rf_a, rf_b):
@@ -89,8 +92,8 @@ def combine_rfs(rf_a, rf_b):
 import functools
 rf_combined = functools.reduce(combine_rfs, all_models)
 
-import joblib
+print(folds_summary_RF)
 
-joblib.dump(rf_combined, 'model_RF_Anas crecca.pkl')
-model_columns = list(to_train.columns)
-joblib.dump(x_train, 'model_columns_RF.pkl')
+#joblib.dump(rf_combined, 'model_RF_Anas crecca.pkl')
+#model_columns = list(to_train.columns)
+#joblib.dump(x_train, 'model_columns_RF.pkl')

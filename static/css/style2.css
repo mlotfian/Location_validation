@@ -1,0 +1,75 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+html { width: 100%; height:100%; overflow:hidden; }
+
+body {
+	/* width: 100%;
+	height:100%; */
+	font-family: 'Helvetica';
+	background: #000;
+	color: #fff;
+	font-size: 24px;
+	text-align:center;
+	letter-spacing:1.4px;
+	padding: 0;
+	margin: 0;
+
+}
+@import url('http://getbootstrap.com/dist/css/bootstrap.css');
+.navbar.navbar-inverse .navbar-header .navbar-brand {
+        display: block;
+        text-align:center;
+        float: none;
+        vertical-align: top;
+}
+
+.navbar.navbar-inverse .navbar-header{
+  float: none;
+}
+
+		#mapid {
+			position: absolute;
+				height: 100%;
+				width: 100%;
+				z-index: 0;
+		}
+		#over_map { width:100%;
+		height: 8%;
+		background-color: rgba(0,0,0,0.6);
+		position: absolute;
+		top: 80%;
+}
+.tab {
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%,-50%);
+}
+
+input {
+
+	width: 100%;
+	/* background: rgba(0,0,0,0.3); */
+	border: none;
+	outline: none;
+	padding: 10px;
+	font-size: 13px;
+	border-radius: 4px;
+
+	left: 50%;
+	transform: translate(-50%);
+}
+.submit {
+      position: absolute;
+      right: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 10px;
+    }
+.probTxt{
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    height: 150px;
+}
