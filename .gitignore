@@ -4,8 +4,11 @@
 *.tif
 *.whl
 *.pkl
+*.log
 
 # ignore the folders
 
-models_saved/*
-env_variables/*
+RFmodels/*
+all_swiss/*
+logs/*
+Lib/*

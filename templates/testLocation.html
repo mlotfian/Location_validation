@@ -52,23 +52,54 @@
          <button type="submit" class="btn btn-success">Predict the probability of occurrence</button>
        </div>
        </form>
+
+       <form action="{{ url_for('suggest')}}"method="post" onsubmit="myFunction()">
+
+         <input type="hidden" id="lon2" name="lon" value="">
+         <input type="hidden" id="lat2" name="lat" value=""/>
+           <div class="suggest">
+             <button type="submit" class="btn btn-success">Suggest me some species</button>
+           </div>
+       </form>
  </div>
  <!-- now showing the message for probability of occurrence -->
+{% if pred_feedback %}
  {% for message in get_flashed_messages() %}
- <div class="alert alert-success alert-dismissible fade show probTxt" role="alert">
-   {{ prediction_text }}
+      <div class="alert alert-success alert-dismissible fade show probTxt" role="alert">
+        {% for msg in pred_feedback %}
+        <span>The probability of observing <strong>{{msg[0]}}</strong> in a neighbourhood of 1km<sup>2</sup> around your location is <strong>{{msg[1]}}</strong>
+          percent. This species could be usually observed in <strong>{{msg[2]}}</strong>.
+        </span>
+        {% endfor %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+ {% endfor %}
+ {% endif %}
+
+{% if suggestionL %}
+ {% for message in get_flashed_messages() %}
+ <div class="alert alert-info alert-dismissible fade show probTxt" role="alert">
+   <span>Species to be observed:</br></br></span>
+<ul>
+   {% for msg in suggestionL %}
+     <li><strong>{{ msg[0]}}:</strong><a href="{{msg[2]}}">see more</a></li>
+ {% endfor %}
+ </ul>
    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
   <span aria-hidden="true">&times;</span>
   </button>
  </div>
  {% endfor %}
-
+{% endif %}
 
  <script type="text/javascript">
 
  navigator.geolocation.getCurrentPosition(function(location) {
    var latlng = new L.LatLng(location.coords.latitude, location.coords.longitude);
 
+   //console.log(latlng);
    var mymap = L.map('mapid').setView(latlng, 18);
    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -79,6 +110,7 @@
     accessToken: 'pk.eyJ1IjoibWxvdGZpYW4iLCJhIjoiY2tvMDdoMGJiMGN2azJ3bXZoZ2VoMmw4ZiJ9.JswRscDkgTECIk9aA7E8EA'
 }).addTo(mymap);
 
+console.log(latlng);
 mymap.on('click',
     function(e){
         var coord = e.latlng; // no need for toString()
@@ -87,6 +119,8 @@ mymap.on('click',
         var newMarker = L.marker(e.latlng, {draggable:'true'}).addTo(mymap)
         document.getElementById("lonId").value = lng;
         document.getElementById("latId").value = lat;
+        document.getElementById("lon2").value = lng;
+        document.getElementById("lat2").value = lat;
 
 });
 });

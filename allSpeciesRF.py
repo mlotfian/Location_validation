@@ -48,7 +48,7 @@ evaluations = []
 
 import csv
 
-with open('C:/notes/Location_validation/API_Django/env/all_names.csv', newline='') as f:
+with open('C:/Bio_Loc_API/Bio_API/all_names.csv', newline='') as f:
     reader = csv.reader(f)
     all_names = [row for row in reader][0]
 
@@ -57,10 +57,10 @@ for sp_name in all_names:
     i = 1
     all_models =[]
 
-    PRES_ABS = pd.read_csv("C:/notes/Location_validation/API_Django/env/pres_abs_env/" + sp_name +"_pres_abs_env.csv", index_col=0)
+    PRES_ABS = pd.read_csv("C:/Bio_Loc_API/Bio_API/pres_abs_env/" + sp_name +"_pres_abs_env.csv", index_col=0)
     PRES_ABS = gpd.GeoDataFrame(PRES_ABS, geometry=gpd.points_from_xy(PRES_ABS.lon, PRES_ABS.lat))
 
-    spBlocks = pd.read_csv("C:/notes/Location_validation/API_Django/env/best_folds/" + sp_name +"_spFold.csv", index_col=0)
+    spBlocks = pd.read_csv("C:/Bio_Loc_API/Bio_API/best_folds/" + sp_name +"_spFold.csv", index_col=0)
     spBlocks = convert_to_gdp(spBlocks)
     spBlocks = spBlocks.dissolve(by='grid_id')
 
@@ -81,7 +81,7 @@ for sp_name in all_names:
         test_0, test_1 = len(y_test[y_test['pres_abs']==0]), len(y_test[y_test['pres_abs']==1])
 
         #start training
-        globals()["RF" + str(i)]=BalancedRandomForestClassifier(n_estimators=500)
+        globals()["RF" + str(i)]=BalancedRandomForestClassifier(n_estimators=1000)
         (globals()["RF" + str(i)]).fit(x_train,y_train)
 
         all_models.append(globals()["RF" + str(i)])
@@ -108,10 +108,10 @@ for sp_name in all_names:
     eval = pd.DataFrame(folds_summary_RF)
     evaluations.append(eval)
     rf_combined = functools.reduce(combine_rfs, all_models)
-    joblib.dump(rf_combined, "C:/notes/Location_validation/API_Django/RFmodels/" + sp_name + "_RFmodel.pkl", compress=3)
+    joblib.dump(rf_combined, "C:/Bio_Loc_API/RFmodels/" + sp_name + "_RFmodel.pkl", compress=3)
 
 all_eval = pd.concat(evaluations)
-all_eval.to_csv("C:/notes/Location_validation/API_Django/RF_evaluation/RFperformance.csv")
+all_eval.to_csv("C:/Bio_Loc_API/RF_evaluation/RFperformance.csv")
 
 
 

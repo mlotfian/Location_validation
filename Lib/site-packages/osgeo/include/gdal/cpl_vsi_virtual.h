@@ -105,6 +105,8 @@ public:
                       { (void) pszDirname; return nullptr; }
     virtual char **ReadDirEx( const char *pszDirname, int /* nMaxFiles */ )
                       { return ReadDir(pszDirname); }
+    virtual char **SiblingFiles( const char * /*pszFilename*/ )
+                      { return nullptr; }
     virtual int Rename( const char *oldpath, const char *newpath )
                       { (void) oldpath; (void)newpath; errno=ENOENT; return -1; }
     virtual int IsCaseSensitive( const char* pszFilename )
@@ -273,5 +275,7 @@ const int CPL_DEFLATE_TYPE_GZIP = 0;
 const int CPL_DEFLATE_TYPE_ZLIB = 1;
 const int CPL_DEFLATE_TYPE_RAW_DEFLATE = 2;
 VSIVirtualHandle CPL_DLL *VSICreateGZipWritable( VSIVirtualHandle* poBaseHandle, int nDeflateType, int bAutoCloseBaseHandle );
+
+VSIVirtualHandle *VSICreateUploadOnCloseFile( VSIVirtualHandle* poBaseHandle );
 
 #endif /* ndef CPL_VSI_VIRTUAL_H_INCLUDED */

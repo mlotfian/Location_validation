@@ -65,11 +65,23 @@ input {
       transform: translateY(-50%);
       margin-left: 10px;
     }
+		.suggest {
+		      position: absolute;
+		      left: 10%;
+		      top: 50%;
+		      transform: translateY(-50%);
+		      margin-left: 10px;
+		    }
 .probTxt{
 	position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 450px;
-    height: 150px;
+    display: inline-block;
+		padding-right: 35px;
+		padding: 30px 35px 30px 10px;
+}
+
+ul {
+  text-align: left;
 }

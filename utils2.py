@@ -3,9 +3,10 @@ import pandas as pd
 import geopandas as gpd
 from shapely.geometry import Point, mapping
 import matplotlib.pyplot as plt
+import pyproj
 from pyproj import Proj, transform
 import fiona
-import shapefile
+#import shapefile
 import matplotlib.pyplot as plt
 import rasterio
 from rasterio.mask import mask
@@ -21,10 +22,10 @@ def createZone(lat,lon):
     rp = Reprojector()
 
     p1 = Point(lat,lon)
-    print(p1)
+    #print(p1)
     print("initial point: {}".format(p1))
     p2 = rp.transform(p1, from_srs=4326, to_srs=2056)
-    print("point after CRS transformation: {}".format(p2))
+    #print("point after CRS transformation: {}".format(p2))
 
     buffer = p2.buffer(1000)
     envelope = buffer.envelope
@@ -41,21 +42,21 @@ def createZone(lat,lon):
     sum_lc=0
     geom= Zone.geometry
     #extracting landscape metrices
-    print("start")
+    #print("start")
     with rasterio.open("CLC_Aggr_100_new.tif") as src:
         no_data=src.nodata
         out_image, out_transform = rasterio.mask.mask(src, geom, crop=True)
-    print(out_image.shape)
+    #print(out_image.shape)
     out_image = np.extract(out_image != no_data, out_image)
     (unique, counts) = np.unique(out_image, return_counts=True)
-    print(out_image.shape)
+    #print(out_image.shape)
     frequencies = np.asarray((unique, counts)).T
-    print(frequencies)
+    #print(frequencies)
     for el in frequencies:
-      print(el)
+      #print(el)
       sum_lc = sum_lc + el[1]
-      print(el[0],el[1])
-    print(sum_lc)
+      #print(el[0],el[1])
+    #print(sum_lc)
     for i in range(len(LC_types)):
       for el in frequencies:
         if LC_types[i] == el[0]:
@@ -91,15 +92,15 @@ def createZone(lat,lon):
         no_data=src.nodata
 
         out_image, out_transform = rasterio.mask.mask(src, geom, crop=True)
-        print(out_image.shape)
+        #print(out_image.shape)
         out_image = np.extract(out_image != no_data, out_image)
     (unique, counts) = np.unique(out_image, return_counts=True)
-    print(out_image.shape)
+    #print(out_image.shape)
     frequencies = np.asarray((unique, counts)).T
     for el in frequencies:
       sum = sum + el[1]
       value = value+ el[0]
-    print(sum)
+    #print(sum)
     if sum==0:
       average_ndvi=-999
     else:
@@ -118,6 +119,26 @@ def createZone(lat,lon):
        'sparsely_vegetated', 'Glaciers', 'wetland', 'waterbodie', 'Elev_meanm',
        'slope_mean', 'ndvi_mean']
 
-    print(input)
-    print(time.time() - start)
+    #print(input)
+    #print(time.time() - start)
     return input
+
+# get grid_id in order to see where is the observation point in the swiss grids,
+# and based on the grid id query from the db and give suggestions for the possible species to be observed in a given location
+
+def getGridId(lat,lon, grid):
+    lst_ind =[]
+    #rp = Reprojector()
+    # wgs84 = pyproj.Proj(init='epsg:4326')
+    # ch1903 = pyproj.Proj(init='epsg:2056')
+    # #p = Point(lat,lon)
+    # lon2, lat2 = pyproj.transform(wgs84, ch1903, lon, lat)
+    p = Point(lon,lat)
+    print(p)
+    bool = grid.geometry.contains(p)
+    bool = pd.DataFrame(bool)
+    for index , row in bool.iterrows():
+        if row[0] == True:
+            lst_ind.append(index)
+    print(lst_ind)
+    return lst_ind

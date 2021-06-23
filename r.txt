@@ -1,0 +1,32 @@
+affine==2.3.0
+attrs==21.2.0
+certifi==2020.12.5
+click==7.1.2
+click-plugins==1.1.1
+cligj==0.7.1
+colorama==0.4.4
+Fiona @ file:///C:/Users/insitadmin/Downloads/Fiona-1.8.19-cp38-cp38-win_amd64.whl
+Flask==2.0.1
+GDAL @ file:///C:/Users/insitadmin/Downloads/GDAL-3.2.3-cp38-cp38-win_amd64.whl
+geopandas @ file:///C:/Users/insitadmin/Downloads/geopandas-0.9.0-py3-none-any.whl
+imbalanced-learn==0.8.0
+itsdangerous==2.0.1
+Jinja2==3.0.1
+joblib==1.0.1
+MarkupSafe==2.0.1
+munch==2.5.0
+numpy==1.20.3
+pandas==1.2.4
+pyparsing==2.4.7
+pyproj==3.0.1
+python-dateutil==2.8.1
+pytz==2021.1
+rasterio @ file:///C:/Users/insitadmin/Downloads/rasterio-1.2.3-cp38-cp38-win_amd64.whl
+scikit-learn==0.24.2
+scipy==1.6.3
+Shapely==1.7.1
+six==1.16.0
+sklearn==0.0
+snuggs==1.4.7
+threadpoolctl==2.1.0
+Werkzeug==2.0.1
