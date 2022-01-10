@@ -9,6 +9,7 @@
 # ignore the folders
 
 RFmodels/*
+RFmodels_commname/*
 all_swiss/*
 logs/*
 Lib/*

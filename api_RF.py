@@ -28,7 +28,7 @@ from psycopg2.extensions import register_adapter, AsIs
 psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
 
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-context.load_cert_chain('C:/Certif/cert.pem','C:/Certif/key.pem')
+context.load_cert_chain('C:/Certif/cert_new2.pem','C:/Certif/key_new2.pem')
 
 
 # my API definition
@@ -56,14 +56,20 @@ class Location_val(db.Model):
 swiss_grid = gpd.read_file('C:/Bio_Loc_API/Bio_API_V2/all_swiss/swiss_4326.shp')
 
 
-with open('C:/Bio_Loc_API/Bio_API_V2/all_names.csv', newline='') as f:
+#with open('C:/Bio_Loc_API/Bio_API_V2/all_names.csv', newline='') as f:
+#    reader = csv.reader(f)
+#    all_names = [row for row in reader][0]
+#print(all_names)
+
+with open('C:/Bio_Loc_API/Bio_API_V2/all_commNames.csv', newline='') as f:
     reader = csv.reader(f)
-    all_names = [row for row in reader][0]
+    all_names = [row for row in reader]
+#print(all_names2[:2])
 
 
-for sp_name in all_names[:2]:
-    globals()["RF" + sp_name] = joblib.load("C:/Bio_Loc_API/Bio_API_V2/RFmodels/" + sp_name + "_RFmodel.pkl")
-    print("model loaded for {}".format(sp_name))
+for sp_name in all_names:
+    globals()["RF" + sp_name[0]] = joblib.load("C:/Bio_Loc_API/Bio_API_V2/RFmodels_commname/" + sp_name[0] + "_RFmodel.pkl")
+    print("model loaded for {}".format(sp_name[0]))
 
 
 @app.route('/')
@@ -109,6 +115,7 @@ def suggest():
 # predict the probability of occurance of species in a 2km2 zone from the give location
 @app.route('/v1/predict', methods=['POST', 'GET'])
 def predict():
+
     app.logger.info('Info level log')
     # json_ = request.json
     # toPredict = createZone(json_['lat'],json_['lon'])
@@ -132,7 +139,7 @@ def predict():
 
     connection = psycopg2.connect(database="location_API",user="postgres", password="mary3000", host='localhost')
     cursor = connection.cursor()
-    query = """select distinct(habitat), comm_name from location_val where sp_name=""" + """'""" + sp_name + """'"""
+    query = """select distinct(habitat), comm_name from location_val where comm_name=""" + """'""" + sp_name + """'"""
     cursor.execute(query)
     rows=cursor.fetchall()
     print(rows)
