@@ -7,7 +7,7 @@ Location validation is an API aims to predict the probability of occurrence of b
 
 ## Requirements:
 
-```r.txt```
+```pip install -r r.txt```
 
 ## endpoints:
 
